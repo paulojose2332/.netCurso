@@ -21,14 +21,14 @@ namespace CursoNetCoreQualyteam.Controllers
                     Description = "Um belo prato de feijão com arroz que alimenta todo bom brasileiro",
                     Ingredients = "Feijão, Arroz",
                     Preparation = "Mistureo feijão com o arroz e pronto.",
-                    ImageUrl = "fakeurl.com/feijaocomarroz"
+                    ImageUrl = "https://bugg.com.br/wordpress/wp-content/uploads/2016/11/Arroz-com-feij%C3%A3o.jpg"
                 },new ReceitaViewModel(){
                     Id = 2,
                     Title = "Feijão com Arroz",
                     Description = "Um belo prato de feijão com arroz que alimenta todo bom brasileiro",
                     Ingredients = "Feijão, Arroz",
                     Preparation = "Mistureo feijão com o arroz e pronto.",
-                    ImageUrl = "fakeurl.com/feijaocomarroz"
+                    ImageUrl = "https://www.falamart.com.br/wp-content/uploads/2019/07/prato-arroz-e-feij%C3%A3o-1-1068x707.jpg"
                 }
             };
         }

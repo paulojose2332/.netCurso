@@ -39,7 +39,8 @@ namespace CursoNetCoreQualyteam
             {
                 app.UseHsts();
             }
-
+        
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseMvc();
         }
     }
