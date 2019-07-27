@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using CursoNetCoreQualyteam.Dominio;
 using CursoNetCoreQualyteam.Infraestrutura;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,52 +30,86 @@ namespace CursoNetCoreQualyteam.Controllers
                     ImageUrl = receita.UrlDaImagem
                 }
             ).ToArray();
-
-            // return new ReceitaViewModel[] {
-            //     new ReceitaViewModel(){
-            //         Id = 1,
-            //         Title = "Feijão com Arroz",
-            //         Description = "Um belo prato de feijão com arroz que alimenta todo bom brasileiro",
-            //         Ingredients = "Feijão, Arroz",
-            //         Preparation = "Mistureo feijão com o arroz e pronto.",
-            //         ImageUrl = "https://bugg.com.br/wordpress/wp-content/uploads/2016/11/Arroz-com-feij%C3%A3o.jpg"
-            //     },new ReceitaViewModel(){
-            //         Id = 2,
-            //         Title = "Feijão com Arroz",
-            //         Description = "Um belo prato de feijão com arroz que alimenta todo bom brasileiro",
-            //         Ingredients = "Feijão, Arroz",
-            //         Preparation = "Mistureo feijão com o arroz e pronto.",
-            //         ImageUrl = "https://www.falamart.com.br/wp-content/uploads/2019/07/prato-arroz-e-feij%C3%A3o-1-1068x707.jpg"
-            //     }
-            // };
         }
 
-        // GET api/values/5
+        // GET api/receitas/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public ActionResult<ReceitaViewModel> Get(int id)
         {
-            return "value";
+            return _context.Receitas.Select(receita => 
+                new ReceitaViewModel(){
+                    Id = receita.Id,
+                    Title = receita.Titulo,
+                    Description = receita.Descricao,
+                    Ingredients = receita.Ingredientes,
+                    Preparation = receita.Preparacao,
+                    ImageUrl = receita.UrlDaImagem
+                }
+            ).Where(receita => receita.Id == id).FirstOrDefault();
         }
 
-        // POST api/values
+        // POST api/receitas
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<ReceitaViewModel> Post([FromBody] ReceitaViewModel receitaPayload)
         {
+            var receita = new Receita(receitaPayload.Id, receitaPayload.Title, receitaPayload.Description, receitaPayload.Ingredients, receitaPayload.Preparation, receitaPayload.ImageUrl);
+            _context.Receitas.Add(receita);
+            _context.SaveChanges();
+
+            var newViewModel = new ReceitaViewModel(){
+                Id = receita.Id,
+                Title = receita.Titulo,
+                Description = receita.Descricao,
+                Ingredients = receita.Ingredientes,
+                Preparation = receita.Preparacao,
+                ImageUrl = receita.UrlDaImagem
+            };
+            return Ok(newViewModel);
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
+        // DELETE api/receitas/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
-        }
-    }
+            var deleteReceita =  _context.Receitas.Where(receita => receita.Id == id).FirstOrDefault();
 
+            if(deleteReceita == null)
+                return NotFound();
+
+            _context.Receitas.Remove(deleteReceita);
+            _context.SaveChanges();
+
+            return NoContent();
+        }
+        // PUT api/receitas/5
+        [HttpPut("{id}")]
+        public ActionResult<ReceitaViewModel> Put(int id, [FromBody] ReceitaViewModel receitaPayload) {
+            var receita = _context.Receitas.Where(r => r.Id == id).FirstOrDefault();
+
+            if(receita == null)
+                return NotFound();
+
+            receita.Titulo = receitaPayload.Title;
+            receita.Descricao = receitaPayload.Description;
+            receita.Ingredientes = receitaPayload.Ingredients;
+            receita.Preparacao = receitaPayload.Preparation;
+            receita.UrlDaImagem = receitaPayload.ImageUrl;
+
+            _context.Receitas.Update(receita);
+            _context.SaveChanges();
+
+            var updatedViewModel = new ReceitaViewModel(){
+                Id = receita.Id,
+                Title = receita.Titulo,
+                Description = receita.Descricao,
+                Ingredients = receita.Ingredientes,
+                Preparation = receita.Preparacao,
+                ImageUrl = receita.UrlDaImagem
+            };
+            return Ok(updatedViewModel);
+        }
+
+    }
 
     public class ReceitaViewModel
     {
