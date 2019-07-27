@@ -11808,11 +11808,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\qualyteam-curso\\curso\\curso-net-core\\CursoNetCoreQualyteam\\CursoNetCoreQualyteam.csproj",
+      "projectUniqueName": "C:\\Users\\qualyteam-curso\\curso\\curso-net-core\\src\\CursoNetCoreQualyteam\\CursoNetCoreQualyteam.csproj",
       "projectName": "CursoNetCoreQualyteam",
-      "projectPath": "C:\\Users\\qualyteam-curso\\curso\\curso-net-core\\CursoNetCoreQualyteam\\CursoNetCoreQualyteam.csproj",
+      "projectPath": "C:\\Users\\qualyteam-curso\\curso\\curso-net-core\\src\\CursoNetCoreQualyteam\\CursoNetCoreQualyteam.csproj",
       "packagesPath": "C:\\Users\\qualyteam-curso\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\qualyteam-curso\\curso\\curso-net-core\\CursoNetCoreQualyteam\\obj\\",
+      "outputPath": "C:\\Users\\qualyteam-curso\\curso\\curso-net-core\\src\\CursoNetCoreQualyteam\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

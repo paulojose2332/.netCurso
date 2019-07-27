@@ -40,7 +40,6 @@ namespace CursoNetCoreQualyteam
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
