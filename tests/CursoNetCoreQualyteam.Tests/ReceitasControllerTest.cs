@@ -203,20 +203,18 @@ namespace CursoNetCoreQualyteam.Controllers.Tests
                 Preparacao = "Misture o e leve ao fogo.",
                 UrlDaImagem = "https://img.itdg.com.br/tdg/images/recipes/000/000/114/75811/75811_original.jpg?mode=crop&width=710&height=400"
             };
+            string tituloModificado = "Titulo V2";
+            string descricaoModificado = "Descrição V2";
 
             var context = CreateTestContext();
             context.AddRange(brigadeiro);
             context.SaveChanges();
             var controller = new ReceitasController(context);
 
-            var titulo = brigadeiro.Titulo + "modificado";
-            var descricao = brigadeiro.Descricao + " modificado";
-            
-
             controller.Put(brigadeiro.Id, new ReceitaViewModel() {
                 Id = brigadeiro.Id,
-                Title = "Titulo modificado",
-                Description = "Descrição modificada",
+                Title = tituloModificado,
+                Description = descricaoModificado,
                 Ingredients = brigadeiro.Ingredientes,
                 Preparation = brigadeiro.Preparacao,
                 ImageUrl = brigadeiro.UrlDaImagem
@@ -227,8 +225,8 @@ namespace CursoNetCoreQualyteam.Controllers.Tests
             //Assert
             receitaDoBanco.Should().BeEquivalentTo(new Receita(){
                 Id = brigadeiro.Id,
-                Titulo = "Titulo modificado",
-                Descricao = "Descrição modificada",
+                Titulo = tituloModificado,
+                Descricao = descricaoModificado,
                 Ingredientes = brigadeiro.Ingredientes,
                 Preparacao = brigadeiro.Preparacao,
                 UrlDaImagem = brigadeiro.UrlDaImagem
@@ -242,29 +240,82 @@ namespace CursoNetCoreQualyteam.Controllers.Tests
         public void Post_DeveRetornarUmaExeception()
         {
             //Arrange
-            var brigadeiro = new Receita()
-            {
-                Id = 4,
-                Titulo = "Brigadeiro com nome grande",
-                Descricao = "Um belo briagdeiro com nome grande",
-                Ingredientes = "Chocolate, Leite Condensado, Nome grande",
-                Preparacao = "Misture o e leve a um fogo GRANDE.",
-                UrlDaImagem = "fake.com/brigadeiro_grande"
-            };
-
             var context = CreateTestContext();
             var controller = new ReceitasController(context);
 
             // Act
             Action act = () => controller.Post(new ReceitaViewModel() {
+                Id = 4,
+                Title = "Brigadeiro com nome grande",
+                Description = "Um belo briagdeiro com nome grande",
+                Ingredients = "Chocolate, Leite Condensado, Nome grande",
+                Preparation = "Misture o e leve a um fogo GRANDE.",
+                ImageUrl = "fake.com/brigadeiro_grande"
+            });
+            act.Should().Throw<Exception>().WithMessage("Passa o titulo direito");
+        }
+
+        [Fact]
+        public void Put_DeveRetornarUmaExeceptionTituloForaDoTamanho() {
+            //criar receita para testar
+            var brigadeiro = new Receita() {
+                Id = 7,
+                Titulo = "Brigadeiro",
+                Descricao = "Um belo briagdeiro",
+                Ingredientes = "Chocolate, Leite Condensado",
+                Preparacao = "Misture o e leve ao fogo.",
+                UrlDaImagem = "https://img.itdg.com.br/tdg/images/recipes/000/000/114/75811/75811_original.jpg?mode=crop&width=710&height=400"
+            };
+
+            var context = CreateTestContext();
+            context.AddRange(brigadeiro);
+            context.SaveChanges();
+            var controller = new ReceitasController(context);
+
+            // Act
+            Action act = () => controller.Put(brigadeiro.Id, new ReceitaViewModel() {
                 Id = brigadeiro.Id,
-                Title = brigadeiro.Titulo,
-                Description = brigadeiro.Descricao,
+                Title =  "Titulo modificado gigante pra caramba GRANDE não sei cade a execption que deiva estar aqui!",
+                Description = "Descrição modificada",
                 Ingredients = brigadeiro.Ingredientes,
                 Preparation = brigadeiro.Preparacao,
                 ImageUrl = brigadeiro.UrlDaImagem
             });
             act.Should().Throw<Exception>().WithMessage("Passa o titulo direito");
         }
+        
+        [Fact]
+        public void Put_DeveAtualizarApenasTituloEDescricao() {
+            //criar receita para testar
+            string originalIngredientes = "Chocolate, Leite Condensado";
+            string originalPreparacao = "Misture o e leve ao fogo.";
+            string originalUrlDaImagem = "https://img.itdg.com.br/tdg/images/recipes/000/000/114/75811/75811_original.jpg?mode=crop&width=710&height=400";
+
+            var brigadeiro = new Receita() {
+                Id = 8,
+                Titulo = "Brigadeiro",
+                Descricao = "Um belo briagdeiro",
+                Ingredientes = originalIngredientes,
+                Preparacao = originalPreparacao,
+                UrlDaImagem = originalUrlDaImagem
+            };
+
+            var context = CreateTestContext();
+            context.AddRange(brigadeiro);
+            context.SaveChanges();
+            var controller = new ReceitasController(context);
+
+            // Act
+            Action act = () => controller.Put(brigadeiro.Id, new ReceitaViewModel() {
+                Id = brigadeiro.Id,
+                Title =  "Titulo modificado",
+                Description = "Descrição modificada",
+                Ingredients = "Ingredientes modificada",
+                Preparation = "Preparação modificada",
+                ImageUrl = "Url da imagem modificada"
+            });
+            act.Should().Throw<Exception>().WithMessage("Só podem ser modificados o titulo e a descrição");
+        }
+
     }
 }

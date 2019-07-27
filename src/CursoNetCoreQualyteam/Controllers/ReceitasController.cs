@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CursoNetCoreQualyteam.Dominio;
 using CursoNetCoreQualyteam.Infraestrutura;
@@ -89,11 +90,13 @@ namespace CursoNetCoreQualyteam.Controllers
             if(receita == null)
                 return NotFound();
 
+            if(!receita.Ingredientes.Equals(receitaPayload.Ingredients)
+                // || !receita.Preparacao.Equals(receitaPayload.Preparation) // TODO culpa do frontend
+                || !receita.UrlDaImagem.Equals(receitaPayload.ImageUrl))
+                    throw new Exception("Só podem ser modificados o titulo e a descrição");
+
             receita.Titulo = receitaPayload.Title;
             receita.Descricao = receitaPayload.Description;
-            receita.Ingredientes = receitaPayload.Ingredients;
-            receita.Preparacao = receitaPayload.Preparation;
-            receita.UrlDaImagem = receitaPayload.ImageUrl;
 
             _context.Receitas.Update(receita);
             _context.SaveChanges();

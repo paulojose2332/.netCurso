@@ -2,12 +2,9 @@ using System;
 
 namespace CursoNetCoreQualyteam.Dominio {
     public class Receita {
-        public const int LimiteDeCaracteresDoTitulo = 15;
+        public const int LimiteDeCaracteresDoTitulo = 20;
         public Receita() {}
         public Receita(int id, string titulo, string descricao, string ingredientes, string preparacao, string urlDaImagem) {
-            if(!CaracteresDoTituloEhValido(titulo))
-                throw new Exception("Passa o titulo direito");
-
             Id = id;
             Titulo = titulo;
             Descricao = descricao;
@@ -17,7 +14,14 @@ namespace CursoNetCoreQualyteam.Dominio {
         }
 
         public int Id { get; set; }
-        public string Titulo { get; set; }
+        private string _titulo;
+        public string Titulo {
+            get { return _titulo; }
+            set { 
+                if(!CaracteresDoTituloEhValido(value)) throw new Exception("Passa o titulo direito");
+                _titulo = value;
+            }
+         }
         public string Descricao { get; set; }
         public string Ingredientes { get; set; }
         public string Preparacao { get; set; }
